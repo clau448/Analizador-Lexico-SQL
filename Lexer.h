@@ -8,22 +8,23 @@
 
 class Lexer {
 private:
-    std::string input;
-    int currentPos;
-    int currentLine;
-    int currentCol;
-    Keywords keywords;
+  std::string input;
+  int currentPos;
+  int currentLine;
+  int currentCol;
+  Keywords keywords;
 
-    char peek();
-    char advance();
-    void skipWhitespace();
+  char peek();
+  char advance();
+  void skipWhitespace();
 
 public:
-    Lexer(const std::string& source) : input(source), currentPos(0), currentLine(1), currentCol(1) {}
+  Lexer(const std::string& source) : input(source), currentPos(0), currentLine(1), currentCol(1) {}
     
-    std::vector<Token> tokenize();
-    
-    Token getNextToken(); 
+  std::vector<Token> tokenize();
+  
+  Token getNextToken(); 
 };
 
 #endif
+
