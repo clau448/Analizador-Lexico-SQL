@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include <algorithm>
+#include <cctype>
 
 class Keywords {
 private:
@@ -45,4 +46,3 @@ public:
 };
 
 #endif
-
