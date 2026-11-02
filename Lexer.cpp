@@ -20,7 +20,7 @@ char Lexer::advance() {
 }
 
 void Lexer::skipWhitespace() {
-  while (std::isspace(peek())) {
+  while (std::isspace(static_cast<unsigned char>(peek()))) {
     advance();
   }
 }
