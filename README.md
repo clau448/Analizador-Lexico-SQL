@@ -8,7 +8,7 @@ Este proyecto se desarrolla como parte de la **Práctica de Laboratorio 4: Anali
 
 - Piero Adriano Cardenas Villagomez
 - Claudia Victoria Agostinelli Cordova
-- Integrante 3: ______________________________
+- Quinteros Condori Jesús Salvador
 
 ## Objetivo
 
