@@ -59,12 +59,17 @@ su propia contribucion.
 
 ## Evidencia de compilacion y pruebas
 
-La evidencia final se registra con los comandos y resultados realmente
-ejecutados antes de publicar las ramas. El modulo gramatical se valida con:
+El 5 de noviembre de 2026 se compilo con C++11 y advertencias activadas. El
+modulo gramatical, el motor y la validacion se ejecutan con:
 
 ```bash
 make -C parser_ll1 test
 ```
+
+Resultado real: tabla sin conflictos; pruebas del motor aprobadas; 10 consultas
+validas aceptadas y 14 invalidas rechazadas; posiciones multilinea y trazador
+verificados. Tambien se compilo y ejecuto por separado el programa de la
+Practica 4 para comprobar que permanece operativo.
 
 ## Distribucion de responsabilidades
 

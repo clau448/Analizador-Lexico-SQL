@@ -61,6 +61,8 @@ ParseResult Parser::parseTokens(const std::vector<Token>& supplied) const {
     const Token& lookaheadToken = tokens[index];
     Symbol lookahead = Grammar::terminalFor(lookaheadToken.type);
     Symbol top = stack.back();
+    const std::string stackBefore = stackText(stack);
+    const std::string inputBefore = remainingInput(tokens, index);
     std::string action;
 
     if (lookaheadToken.type == TokenType::TOKEN_ERROR) {
@@ -96,7 +98,7 @@ ParseResult Parser::parseTokens(const std::vector<Token>& supplied) const {
       action = "rechazar: se esperaba " + top;
     }
 
-    if (traceEnabled_) result.trace.push_back(TraceStep{step++, stackText(stack), remainingInput(tokens, index), action});
+    if (traceEnabled_) result.trace.push_back(TraceStep{step++, stackBefore, inputBefore, action});
     if (!result.errors.empty()) return result;
   }
 
