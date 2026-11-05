@@ -26,6 +26,7 @@ std::unordered_map<TokenType, std::string> tokenTypes =
   {TokenType::OP_GREATER_EQUAL, "OP_GREATER_EQUAL"},
   {TokenType::COMMA, "COMMA"},
   {TokenType::SEMICOLON, "SEMICOLON"},
+  {TokenType::STAR, "STAR"},
   {TokenType::TOKEN_EOF, "TOKEN_EOF"},
   {TokenType::TOKEN_ERROR, "TOKEN_ERROR"},
 };
@@ -66,7 +67,7 @@ int main() {
   printAnalisis(tokens1);
 
   std::cout << BLUE_COLOR << "\n[sqlQuery2]: " << GREEN_COLOR << sqlQuery2 << RESET_COLOR << "\n";
-  std::cout << MAGENTA_COLOR << "\nAnálisis Léxico: [Lexema | Tipo de token | Línea | Columna]" << RESET_COLOR "\n";
+  std::cout << MAGENTA_COLOR << "\nAnálisis Léxico: [Lexema | Tipo de token | Línea | Columna]" << RESET_COLOR << "\n";
   printAnalisis(tokens2);
 
   std::cout << BLUE_COLOR << "\n[sqlQuery3]: " << GREEN_COLOR << sqlQuery3 << RESET_COLOR << "\n";

@@ -9,7 +9,7 @@
 class Lexer {
 private:
   std::string input;
-  int currentPos;
+  std::string::size_type currentPos;
   int currentLine;
   int currentCol;
   Keywords keywords;
