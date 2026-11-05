@@ -32,3 +32,16 @@ make -C parser_ll1 test
 La prueba comprueba el numero de producciones, entradas representativas de
 FIRST y FOLLOW, celdas de la tabla, ausencia de conflictos y el nuevo terminal
 `*` integrado al Lexer existente.
+
+## Compilacion y uso
+
+```bash
+make -C parser_ll1
+./parser_ll1/sql_parser "SELECT nombre FROM alumnos WHERE edad >= 18;"
+./parser_ll1/sql_parser --trace "SELECT * FROM alumnos;"
+make -C parser_ll1 test
+```
+
+`Parser.cpp` implementa el algoritmo mediante `std::vector<Symbol>` usado como
+pila. No llama recursivamente a ninguna funcion de analisis: consulta M[A,a],
+expande la produccion en orden inverso o realiza `match` del terminal superior.
