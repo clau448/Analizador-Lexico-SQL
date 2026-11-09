@@ -27,6 +27,7 @@ std::unordered_map<TokenType, std::string> tokenTypes =
   {TokenType::COMMA, "COMMA"},
   {TokenType::SEMICOLON, "SEMICOLON"},
   {TokenType::TOKEN_EOF, "TOKEN_EOF"},
+  {TokenType::STAR, "STAR"},
   {TokenType::TOKEN_ERROR, "TOKEN_ERROR"},
 };
 
@@ -50,7 +51,7 @@ void printAnalisis(const std::vector<Token>& tokens)
 
 int main() {
   std::string sqlQuery1 = "SELECT nombre, edad FROM estudiantes WHERE edad >= 18;";
-  std::string sqlQuery2 = "SelEcT nombre FroM estudiantes wHErE nombre <> 'Jesus AnD edad <= 23;";
+  std::string sqlQuery2 = "SelEcT * FroM estudiantes wHErE nombre <> 'Jesus AnD edad <= 23;";
   std::string sqlQuery3 = "select nombre, score from \nestudiantes where nombre <> 'Jesus' \nand score <= 15.234 or ID # '4321;";
 
   Lexer lexer1(sqlQuery1);
