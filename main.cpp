@@ -1,11 +1,13 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include "Lexer.h"
 
-#define GREEN_COLOR "\033[32m"
-#define BLUE_COLOR "\033[34m"
-#define MAGENTA_COLOR "\033[35m"
-#define RESET_COLOR "\033[0m"
+// Plain output works in PowerShell, cmd.exe and Unix terminals.
+#define GREEN_COLOR ""
+#define BLUE_COLOR ""
+#define MAGENTA_COLOR ""
+#define RESET_COLOR ""
 
 std::unordered_map<TokenType, std::string> tokenTypes =
 {
@@ -76,4 +78,5 @@ int main() {
  
   return 0;
 }
+
 
