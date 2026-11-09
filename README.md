@@ -1,139 +1,101 @@
-# Analizador Léxico SQL
+# Analizador SQL: léxico y sintáctico LL(1)
 
-Analizador léxico desarrollado en **C++** para reconocer y clasificar los componentes de un subconjunto de sentencias SQL, tomando como referencia la instrucción `SELECT`. El programa recorre el texto de entrada, identifica los lexemas en el orden en que aparecen y genera los tokens correspondientes, registrando para cada uno su tipo y ubicación (línea y columna).
+Proyecto en C++11 del curso Estructuras de Datos Avanzadas. Incluye el analizador
+léxico de la Práctica 4 y el parser predictivo de la Práctica 5.
 
-Este proyecto se desarrolla como parte de la **Práctica de Laboratorio 4: Analizador Léxico SQL**, del curso **Estructuras de Datos Avanzadas**, de la Escuela Profesional de Ciencia de la Computación.
+Integrantes: Piero Adriano Cardenas Villagomez, Claudia Victoria Agostinelli
+Cordova y Quinteros Condori Jesús Salvador.
 
-## Integrantes
+El Lexer reconoce SELECT, FROM, WHERE, AND y OR sin distinguir mayúsculas,
+identificadores, enteros, decimales, texto entre comillas simples, operadores
+`=`, `<>`, `!=`, `<`, `>`, `<=`, `>=`, coma, punto y coma y asterisco. Conserva
+lexema, línea y columna. El parser usa FIRST/FOLLOW, tabla LL(1) y pila explícita.
 
-- Piero Adriano Cardenas Villagomez
-- Claudia Victoria Agostinelli Cordova
-- Quinteros Condori Jesús Salvador
+## Windows (PowerShell)
 
-## Objetivo
+Instalar **CMake** y **Visual Studio 2022 / Build Tools 2022**, con la carga
+**Desarrollo para el escritorio con C++** y un Windows SDK. Abrir una terminal
+nueva para reconocer CMake y ejecutar desde la raíz del proyecto:
 
-Implementar un analizador léxico capaz de transformar una cadena que contiene una sentencia SQL en una secuencia ordenada de tokens. Esta secuencia podrá utilizarse como entrada para una etapa posterior de análisis sintáctico.
-
-El alcance de este módulo se limita al reconocimiento y clasificación de unidades léxicas. Por lo tanto, **no ejecuta consultas, no verifica la existencia de tablas o columnas y no valida la gramática completa de SQL**.
-
-## Tokens reconocidos
-
-El analizador identifica las siguientes categorías:
-
-| Categoría | Lexemas o ejemplos |
-|---|---|
-| Palabras reservadas | `SELECT`, `FROM`, `WHERE`, `AND`, `OR` |
-| Identificadores | Nombres de tablas y columnas, como `nombre`, `estudiantes` o `_temporal` |
-| Literales enteros | `18`, `2026` |
-| Literales decimales | `15.234`, `3.5` |
-| Literales de texto | Cadenas delimitadas por comillas simples, como `'Arequipa'` |
-| Operadores relacionales | `=`, `<>`, `!=`, `<`, `>`, `<=`, `>=` |
-| Signos de puntuación | Coma (`,`) y punto y coma (`;`) |
-| Fin de entrada | `TOKEN_EOF` |
-| Error léxico | `TOKEN_ERROR`, para caracteres o secuencias que no cumplen las reglas reconocidas |
-
-Las palabras reservadas se reconocen sin distinguir entre mayúsculas y minúsculas. Sin embargo, el lexema se conserva respetando la forma en que fue escrito en la entrada.
-
-## Estructura del proyecto
-
-El código fuente se organiza en los siguientes archivos:
-
-| Archivo | Descripción |
-|---|---|
-| `main.cpp` | Contiene las consultas de demostración, inicia el análisis léxico y muestra los resultados en consola. |
-| `Lexer.h` | Declara la clase `Lexer`, sus atributos y los métodos utilizados durante el análisis. |
-| `Lexer.cpp` | Implementa el recorrido de los caracteres, el reconocimiento de lexemas y el seguimiento de las posiciones. |
-| `Token.h` | Define los tipos de token, la estructura `Token` y la información de posición (línea y columna). |
-| `Keywords.h` | Contiene el conjunto de palabras reservadas y la lógica para reconocerlas sin distinguir mayúsculas de minúsculas. |
-
-## Requisitos
-
-Para compilar y ejecutar el proyecto se necesita:
-
-- Un compilador de C++ compatible con **C++11 o posterior**, como `g++` o `clang++`.
-- Una terminal o consola desde la cual ejecutar los comandos de compilación.
-
-## Compilación y ejecución
-
-Ubícate en el directorio raíz del repositorio y ejecuta el siguiente comando:
-
-```bash
-g++ -std=c++11 main.cpp Lexer.cpp -o lexer
+```powershell
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+ctest --test-dir build -C Release --output-on-failure
+.\build\Release\lexer.exe
+.\build\Release\sql_parser.exe "SELECT nombre FROM alumnos WHERE edad >= 18;"
+.\build\Release\sql_parser.exe --trace "SELECT * FROM alumnos;"
 ```
 
-En Linux o macOS, inicia el programa con:
+Si ya se configuró build con otro generador, usar una carpeta nueva como
+build-msvc y sustituir build por build-msvc en todos los comandos.
 
-```bash
-./lexer
-```
+También funciona con MinGW-w64 (g++ en PATH), sin CMake:
 
-En Windows, utilizando MinGW, genera el ejecutable y ejecútalo desde PowerShell:
-
-```bash
+```powershell
 g++ -std=c++11 main.cpp Lexer.cpp -o lexer.exe
+g++ -std=c++11 parser_ll1/Grammar.cpp parser_ll1/Parser.cpp parser_ll1/main.cpp Lexer.cpp -o sql_parser.exe
 .\lexer.exe
+.\sql_parser.exe "SELECT * FROM alumnos;"
 ```
 
-Al ejecutarse, el programa procesa las consultas de ejemplo definidas directamente en `main.cpp` y muestra los tokens identificados. La información presentada incluye:
+## macOS (Terminal)
 
-```text
-Lexema | Tipo de token | Línea | Columna
+Instalar las herramientas de compilación con `xcode-select --install` y CMake
+(desde cmake.org o con `brew install cmake` si ya se utiliza Homebrew).
+Desde la raíz:
+
+```sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+ctest --test-dir build --output-on-failure
+./build/lexer
+./build/sql_parser "SELECT nombre FROM alumnos WHERE edad >= 18;"
+./build/sql_parser --trace "SELECT * FROM alumnos;"
 ```
 
-## Reglas léxicas implementadas
+Sin CMake, usar el compilador de Apple:
 
-El reconocimiento de los componentes de la entrada se realiza aplicando las siguientes reglas:
-
-- **Identificadores:** comienzan con una letra o guion bajo (`_`) y pueden continuar con letras, dígitos o guiones bajos.
-- **Números enteros:** están formados por uno o más dígitos.
-- **Números decimales:** contienen una parte entera, un punto y al menos un dígito en la parte decimal. Por ejemplo, `12.5` se reconoce como decimal, mientras que `12.` no cumple el formato esperado.
-- **Cadenas de texto:** están delimitadas por comillas simples. No se permite que una cadena continúe en una línea diferente.
-- **Operadores relacionales:** se reconocen tanto operadores de uno como de dos caracteres, por ejemplo, `=`, `>=`, `<=`, `<>` y `!=`.
-- **Espacios en blanco:** los espacios, tabulaciones y saltos de línea se omiten durante el análisis, actualizando las posiciones correspondientes.
-- **Posiciones:** el conteo de líneas y columnas comienza en `1`.
-- **Errores léxicos:** los caracteres no reconocidos y las cadenas sin cerrar se clasifican como `TOKEN_ERROR`.
-
-## Ejemplo de análisis
-
-Considérese la siguiente sentencia:
-
-```sql
-SELECT nombre, edad FROM estudiantes WHERE edad >= 18;
+```sh
+clang++ -std=c++11 main.cpp Lexer.cpp -o lexer
+clang++ -std=c++11 parser_ll1/Grammar.cpp parser_ll1/Parser.cpp parser_ll1/main.cpp Lexer.cpp -o sql_parser
+./sql_parser "SELECT * FROM alumnos;"
 ```
 
-Durante el análisis, el programa identifica los elementos de la sentencia en el orden en que aparecen:
+## Linux y pruebas automatizadas
 
-1. `SELECT` — palabra reservada.
-2. `nombre` — identificador.
-3. `,` — coma.
-4. `edad` — identificador.
-5. `FROM` — palabra reservada.
-6. `estudiantes` — identificador.
-7. `WHERE` — palabra reservada.
-8. `edad` — identificador.
-9. `>=` — operador relacional.
-10. `18` — literal entero.
-11. `;` — punto y coma.
-12. `TOKEN_EOF` — indica el final de la entrada.
+Con g++ y CMake instalados, usar los mismos comandos CMake de macOS.
+Se conserva `make -C parser_ll1 test all` como alternativa para GNU Make.
 
-## Alcance y estado actual
+CTest ejecuta las tres suites existentes, la demostración léxica y los casos de
+consola: aceptación, rechazo y traza. Las comprobaciones assert permanecen
+habilitadas en las pruebas incluso con Release. GitHub Actions compila y ejecuta
+CTest en Windows (MSVC), macOS (AppleClang) y Linux (GCC); consultar la pestaña
+Actions para los resultados reales de cada ejecución. Al pasar, cada trabajo
+publica sus ejecutables como artefactos para su propio sistema operativo.
+No trasladar un .exe de Windows a macOS ni un binario de macOS a Windows.
 
-La implementación actual permite reconocer y clasificar los elementos léxicos descritos en esta documentación. Las consultas utilizadas para demostrar su funcionamiento se encuentran definidas directamente en `main.cpp`; por el momento, el programa no incorpora una interfaz para recibir sentencias desde la entrada estándar ni para leerlas desde un archivo.
+## Entrada, salida y alcance
 
-Es importante señalar que el analizador puede generar tokens a partir de una secuencia que no constituya una sentencia SQL sintácticamente válida. Esto se debe a que su responsabilidad se limita a identificar lexemas y detectar errores de carácter léxico. La validación de la estructura de una consulta corresponde a una etapa posterior de análisis sintáctico.
+`lexer` ejecuta tres ejemplos predefinidos, incluidos errores deliberados.
+`sql_parser` recibe una consulta por argumentos o lee la entrada estándar si no
+se le pasa una consulta. Imprime ACEPTADA y devuelve 0 al aceptar; devuelve 1 y
+un diagnóstico con posición al rechazar. `--trace` muestra pila, entrada y acción.
 
-Asimismo, este módulo no ejecuta consultas ni interactúa con un sistema gestor de bases de datos. Los ejemplos incluidos en `main.cpp` funcionan como demostraciones manuales; el repositorio todavía no cuenta con una suite independiente de pruebas automatizadas.
+El subconjunto sintáctico admite SELECT con * o lista de columnas, FROM con una
+tabla, WHERE opcional y comparaciones unidas con AND/OR; exige punto y coma.
+No incluye JOIN, paréntesis, comentarios, escapes de comillas ni números
+negativos. No ejecuta consultas ni evalúa precedencia lógica o tipos de datos.
 
-## Posibles mejoras
+## Estructura y documentación
 
-Como trabajo posterior, se consideran las siguientes mejoras:
+- Lexer.cpp, Lexer.h, Token.h y Keywords.h: reconocimiento léxico.
+- main.cpp: demostración léxica con salida sin secuencias de color ANSI.
+- parser_ll1/: gramática, parser, consola y pruebas.
+- CMakeLists.txt: compilación común y CTest.
+- [INFORME_ENTREGA.md](INFORME_ENTREGA.md): informe de la entrega inicial.
+- [parser_ll1/README.md](parser_ll1/README.md): gramática y funcionamiento.
+- [COLABORACION.md](COLABORACION.md): identidad Git y commits de cada integrante.
 
-- Incorporar la lectura de sentencias SQL desde teclado o desde archivos.
-- Ampliar progresivamente el conjunto de palabras reservadas, operadores y símbolos reconocidos.
-- Implementar pruebas automatizadas para los casos válidos y los errores léxicos.
-- Mejorar el tratamiento de cadenas de texto, incluyendo posibles secuencias de escape.
-- Desarrollar una etapa de análisis sintáctico que utilice la secuencia de tokens generada por este módulo.
-
----
-
-**Nota:** Este proyecto aborda la primera etapa del procesamiento de una sentencia SQL: el análisis léxico. Su propósito es identificar y clasificar los componentes de la entrada, dejando la validación sintáctica y cualquier procesamiento posterior fuera del alcance de esta implementación.
+La extensión inicial del parser fue preparada con Codex mediante la cuenta de
+Claudia. Los nombres de las ramas indican responsables de revisión; no cambian
+la autoría. El historial conserva los aportes previos de los tres integrantes.

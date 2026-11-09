@@ -4,3 +4,11 @@ parser_ll1/grammar_tests
 parser_ll1/parser_ll1_tests
 parser_ll1/validation_tests
 parser_ll1/sql_parser
+
+
+# CMake and Windows binaries
+/build*/
+*.exe
+*.obj
+*.pdb
+*.ilk
