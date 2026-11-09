@@ -181,6 +181,12 @@ Token Lexer::getNextToken() {
     return token;
   }
 
+  if (c == '*') {
+    token.lexeme += advance();
+    token.type = TokenType::STAR;
+    return token;
+  }
+
   // 6. CARÁCTER NO RECONOCIDO
   token.lexeme += advance();
   token.type = TokenType::TOKEN_ERROR;
